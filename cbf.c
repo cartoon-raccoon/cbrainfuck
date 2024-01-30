@@ -165,8 +165,11 @@ void execute() {
 
             /* read one byte from stdin, set current byte */
             case ',': {
-                char in = getc(stdin);
-                data[dataptr] = in;
+                int in = fgetc(stdin);
+                if (in == EOF)
+                    data[dataptr] = 0;
+                else
+                    data[dataptr] = (char) in;
             };
             break;
 
