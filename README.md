@@ -1,6 +1,6 @@
 # cbrainfuck
 
-Brainfuck implementation written in less than 200 source lines of C.
+Brainfuck implementation written in less than 300 source lines of C.
 
 No frills, no nothing, you get 30 kilobytes of memory, and that's it.
 
