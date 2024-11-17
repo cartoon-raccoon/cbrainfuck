@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
 #include <stdbool.h>
+#include <getopt.h>
 
 #define DEFAULT_DATA_SIZE 30000
 #define DEFAULT_CODE_SIZE 1024
@@ -163,9 +163,9 @@ void execute() {
             data[dataptr]--;
             break;
 
-            /* read one byte from stdin, set current byte */
+            /* read one byte from our input stream, set current byte */
             case ',': {
-                int in = fgetc(stdin);
+                int in = getchar();
                 if (in == EOF)
                     data[dataptr] = 0;
                 else
@@ -226,6 +226,11 @@ void initialize() {
         perror("error while setting up");
         exit(SYSTEM);
     }
+
+    if (codesize < DEFAULT_DATA_SIZE) {
+        fprintf(stderr, "WARNING: memory size set to %i bytes.", codesize);
+        fprintf(stderr, " A memory size of at least %i bytes is recommended.\n", DEFAULT_DATA_SIZE);
+    }
 }
 
 void teardown() {
@@ -234,16 +239,37 @@ void teardown() {
     free(nesting.data);
 }
 
+void print_usage(char *argname) {
+    fprintf(stderr, "usage: %s [-m MEMSIZE] CODEFILE\n", argname);
+}
+
 
 int main(int argc, char **argv) {
+    int opt;
+    while ((opt = getopt(argc, argv, "m:")) != -1) {
+        switch (opt) {
+            case 'm': {
+                if (optarg == NULL) {
+                    print_usage(argv[0]);
+                    return SYSTEM;
+                }
+                codesize = atoi(optarg);
+                if (codesize <= 0) {
+                    die("bad argument - invalid code size", SYSTEM);
+                }
+                break;
+            }
+        }
+    }
+
     initialize();
 
-    if (argc == 1) {
-        printf("usage: %s FILE\n", argv[0]);
+    if (optind == argc) {
+        print_usage(argv[0]);
         return EXIT_SUCCESS;
     }
 
-    char *filename = argv[1];
+    char *filename = argv[optind];
 
     FILE *codefile = fopen(filename, "r");
     if (!codefile) {
@@ -251,12 +277,12 @@ int main(int argc, char **argv) {
         return SYSTEM;
     }
 
-    //printf("reading code from file %s\n", argv[1]);
+    // printf("reading code from file %s\n", argv[1]);
     read_code_from_file(codefile);
 
     fclose(codefile);
 
-    //printf("executing code\n");
+    // printf("executing code\n");
     execute();
 
     teardown();

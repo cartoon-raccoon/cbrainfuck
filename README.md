@@ -1,8 +1,9 @@
 # cbrainfuck
 
-Brainfuck implementation written in less than 200 source lines of C.
+Brainfuck implementation written in less than 250 source lines of C.
 
-No frills, no nothing, you get 30 kilobytes of memory, and that's it.
+No frills, you get by default 30 kilobytes of memory, you can specify more if needed.
+That's all the customization you get.
 
 Tokei Output:
 
@@ -10,9 +11,9 @@ Tokei Output:
 ===============================================================================
  Language            Files        Lines         Code     Comments       Blanks
 ===============================================================================
- C                       1          262          185           28           49
- Markdown                1            3            0            2            1
+ C                       1          291          211           28           52
+ Markdown                1           19            0           15            4
 ===============================================================================
- Total                   2          265          185           30           50
+ Total                   2          310          211           43           56
 ===============================================================================
 ```
